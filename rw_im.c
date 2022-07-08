@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+
 
 #include "rw_im.h"
 
@@ -326,5 +328,122 @@ int pair_posi(int nbr){
 		return nbr;
 	}
 }
+
+//Fonction du calcule du maximum des éléments dans dans un tableau
+int max_seq(int tab[], int n){
+	int max = tab[0];
+	for(int i=1; i<n; i++)
+		if (tab[i]>max)
+			max = tab[i];
+	return max;
+}
+
+//Fonction du calcule du minimum des éléments dans dans un tableau
+int min_seq(int tab[], int n){
+	int min = tab[0];
+	for(int i=1; i<n; i++)
+		if (tab[i]<min)
+			min = tab[i];
+	return min;
+}
+
+//Calcule d'un pixel avec un filtre sur une image
+void pixel_filtre(int ** origine, int ** filtre, int ** resultat, int taille_f, int x, int y, int somme){
+	int pixel = 0;
+	int ecart = taille_f/2;
+	int xo = x-ecart;
+	int yo = y-ecart;
+	for (int i=0; i<taille_f; i++){
+		for (int j=0; j<taille_f; j++){
+			pixel += filtre[i][j]*origine[xo+i][yo+j];
+		}
+	}
+	pixel = pixel/somme;
+	resultat[x][y] = pixel;
+}
+
+int valeur_absolue(int nombre){
+	if (nombre>=0)
+		return nombre;
+	return -1*nombre;
+}
+
+/*Fonction d'extraction de l'histogramme de l'image hist est un tableau indicé par les niveau de gris
+La taille de hist doit etre superieur ou egale au pixel max représentable*/
+void histogramme_im(int hist[], int ** image, entet_pgm entete){
+	int pixel = 0, max_pixel = entete.encodage_max;
+
+	//Initialisation de l'histogramme avec des 0
+	for (int i=0; i<max_pixel; i++){
+		hist[i] = 0;
+	} 
+	//Remplissage
+	for (int i=0; i<entete.dim.dim1; i++){
+		for (int j=0; j<entete.dim.dim2; j++){
+			pixel = image[i][j];
+			hist[pixel] += 1;
+		}
+	}
+}
+
+//Cette procedure affiche les valeur d'un tableau
+void affiche_tab(int tab[], int taille){
+	for (int i=0; i<taille; i++)
+		printf("Valeur %d = %d \n", i, tab[i]);
+}
+
+//seuillage binaire
+void seuillage_binaire(int **mat, dimension dim, int seuil, int min_pix, int max_pix){
+	int d1 = dim.dim1;
+	int d2 = dim.dim2;
+
+	for (int i=0; i<d1; i++){
+		for (int j=0; j<d2; j++){
+			if (valeur_absolue(mat[i][j])>seuil)
+				mat[i][j] = max_pix;
+			else
+				mat[i][j] = min_pix;
+		}
+	}
+}
+
+//valeur absolue pour un nombre reel
+float valeur_absoluef(float nombre){
+	if (nombre<0)
+		return -nombre;
+	return nombre;
+}
+
+//Recherche de l'indice du minimum
+int argmin(double tab[], int n){
+	int min=0;
+
+	for (int i=0; i<n; i++){
+		if (tab[min]>=tab[i])
+			min = i; 
+	} 
+	return min;
+}
+
+//Generation de nombre aléatoire entre 0 et N
+int nombre_aleatoire(int N){
+	srand(time(NULL));
+	int nbr = rand();
+
+	return nbr%N;
+}
+
+//Melange aléatoire des éléments d'un tableau
+void shuffle(int arr[], int size){
+    srand(time(0));
+    for (int i = 0; i < size; i++) {
+        int j = rand() % size;
+        int t = arr[i];
+        arr[i] = arr[j];
+        arr[j] = t;
+    }
+}
+
+
 
 

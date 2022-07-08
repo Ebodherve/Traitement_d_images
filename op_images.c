@@ -58,19 +58,19 @@ int main(int argc, char **argv){
 		ou_logique(matrice_pixels1, matrice_pixels2, matrice_pixelsR, dim_resultat);
 	else if(strstr(op_logique, "et"))
 		et_logique(matrice_pixels1, matrice_pixels2, matrice_pixelsR, dim_resultat);
-	else if(strstr(op_logique, "+"))
-		add_img(matrice_pixels1, matrice_pixels2, matrice_pixelsR, dim_resultat);
-	else if(strstr(op_logique, "-"))
-		sous_img(matrice_pixels1, matrice_pixels2, matrice_pixelsR, dim_resultat);
-	else if (strstr(op_logique, "x")){
-		float coef1 = atof(argv[5]);
-		float coef2 = atof(argv[6]);
-		multiplication_img(matrice_pixels1, coef1, entete1.dim);
-		multiplication_img(matrice_pixels2, coef2, entete2.dim);
-		add_img(matrice_pixels1, matrice_pixels2, matrice_pixelsR, dim_resultat);
+	else if(strstr(op_logique, "+")){
+			float coef1 = atof(argv[5]);
+			float coef2 = atof(argv[6]);
+			multiplication_img(matrice_pixels1, coef1, entete1.dim);
+			multiplication_img(matrice_pixels2, coef2, entete2.dim);
+			add_img(matrice_pixels1, matrice_pixels2, matrice_pixelsR, dim_resultat);
+	}else if(strstr(op_logique, "-")){
+			float coef1 = atof(argv[5]);
+			float coef2 = atof(argv[6]);
+			multiplication_img(matrice_pixels1, coef1, entete1.dim);
+			multiplication_img(matrice_pixels2, coef2, entete2.dim);
+			sous_img(matrice_pixels1, matrice_pixels2, matrice_pixelsR, dim_resultat);
 	}
-	else
-		printf("Entrez un operateur logique valide (et/ou) \nExemple : ./op_logique im1.pgm et im2.pgm resultat.pgm\n");
 
 	// Conservation du resultat
 	enteteR.dim = dim_resultat;
@@ -99,7 +99,12 @@ void ou_logique(int ** mat1, int ** mat2, int ** matR, dimension dim){
 
 	for (int i=0; i<d1; i++){
 		for (int j=0; j<d2; j++){
-			matR[i][j] = mat1[i][j] || mat2[i][j];
+			if(mat2[i][j]==0)
+				//Lorsque les pixels de l'image de depart sont à 0 on met ceux de la deuxieme image
+				matR[i][j] = mat1[i][j];
+			else
+				//Dans le cas contraire on prend ceux de la premiere image
+				matR[i][j] = mat2[i][j];
 		}
 	}
 }
@@ -110,7 +115,10 @@ void et_logique(int ** mat1, int ** mat2, int ** matR, dimension dim){
 
 	for (int i=0; i<d1; i++){
 		for (int j=0; j<d2; j++){
-			matR[i][j] = mat1[i][j] && mat2[i][j];
+			if (mat2[i][j]==0)
+				matR[i][j] = 0;
+			else
+				matR[i][j] = mat1[i][j];
 		}
 	}
 }
@@ -137,7 +145,6 @@ void sous_img(int ** mat1, int ** mat2, int ** matR, dimension dim){
 		}
 	}
 }
-
 
 void multiplication_img(int ** mat, float coef, dimension dim){
 	int d1 = dim.dim1;

@@ -23,13 +23,14 @@ int moyenneur(int ** origine, int taille, int x, int y);
 int gaussien(int ** gauss, int taille, float ecartype, int max);
 //Construction d'un filtre median
 int median(int ** origine, int taille, int i,int j);
+//filtre par maximum des pixels dans une zone
+int filtre_max(int ** origine, int taille, int i,int j);
+//filtre par minimum des pixels dans une zone
+int filtre_min(int ** origine, int taille, int i,int j);
 //filtre normal
 int normal(int ** origine, int taille, int i,int j);
 //Ajustement de la taille d'un filtre
 int ajuste_taille(int nombre);
-//calcule d'un pixel avec un filtre
-void pixel_filtre(int ** origine, int ** filtre, int ** resultat, int taille_f, int x, int y, int somme);
-
 
 
 int main(int argc, char **argv){
@@ -74,6 +75,12 @@ int main(int argc, char **argv){
 		printf("Entrez l'élément maximale : \n");
 		scanf("%d",&max);
 		filtrage_im(matrice_pixels, matrice_pixels_resultat, 2, dim_f, entete_im.dim, ecart, max, val_bord);
+	}else if(strstr(type_f, "max")){
+		printf("Filtre maximale \n");
+		filtrage_im(matrice_pixels, matrice_pixels_resultat, 4, dim_f, entete_im.dim, 1, 1, val_bord);
+	}else if(strstr(type_f, "min")){
+		printf("Filtre minimale \n");
+		filtrage_im(matrice_pixels, matrice_pixels_resultat, 5, dim_f, entete_im.dim, 1, 1, val_bord);
 	}
 
 	// Test d'affichage des pixel
@@ -133,6 +140,20 @@ void filtrage_im(int ** origine, int ** convoluer, int typef, int dim_f, dimensi
 			}
 		}
 		remplit_bordures(convoluer, bord, centre_masquex, dim_o);
+	}else if (typef == 4){
+		for (int i=centre_masquex; i<d1_o - centre_masquex; i++){
+			for (int j=centre_masquey; j<d2_o - centre_masquey; j++){
+				convoluer[i][j] = filtre_max(origine, d_m, i, j);
+			}
+		}
+		remplit_bordures(convoluer, bord, centre_masquex, dim_o);
+	}else if (typef == 5){
+		for (int i=centre_masquex; i<d1_o - centre_masquex; i++){
+			for (int j=centre_masquey; j<d2_o - centre_masquey; j++){
+				convoluer[i][j] = filtre_min(origine, d_m, i, j);
+			}
+		}
+		remplit_bordures(convoluer, bord, centre_masquex, dim_o);
 	}
 }
 
@@ -187,6 +208,40 @@ int gaussien(int ** gauss, int taille, float ecartype, int max){
 }
 
 
+int filtre_max(int ** origine, int taille, int i,int j){
+	const int t = taille*taille;
+	int med[t];
+	int i_med=0;
+	int ecart = taille/2;
+	int xo = i - ecart;
+	int yo = j - ecart;
+
+	for (int x=0; x<taille; x++){
+		for (int y=0; y<taille; y++){
+			med[i_med] = origine[x+xo][y+yo];
+			i_med++;
+		}
+	}
+	return max_seq(med, t);
+}
+//filtre normal
+int filtre_min(int ** origine, int taille, int i,int j){
+	const int t = taille*taille;
+	int med[t];
+	int i_med=0;
+	int ecart = taille/2;
+	int xo = i - ecart;
+	int yo = j - ecart;
+
+	for (int x=0; x<taille; x++){
+		for (int y=0; y<taille; y++){
+			med[i_med] = origine[x+xo][y+yo];
+			i_med++;
+		}
+	}
+	return min_seq(med, t);
+}
+
 // calcule d'un pixel median
 int median(int ** origine, int taille, int i,int j){
 	const int t = taille*taille;
@@ -208,26 +263,9 @@ int median(int ** origine, int taille, int i,int j){
 }
 
 
-//Calcule d'un pixel avec un filtre sur une image
-void pixel_filtre(int ** origine, int ** filtre, int ** resultat, int taille_f, int x, int y, int somme){
-	int pixel = 0;
-	int ecart = taille_f/2;
-	int xo = x-ecart;
-	int yo = y-ecart;
-	for (int i=0; i<taille_f; i++){
-		for (int j=0; j<taille_f; j++){
-			pixel += filtre[i][j]*origine[xo+i][yo+j];
-		}
-	}
-	pixel = pixel/somme;
-	resultat[x][y] = pixel;
-}
-
-
 //filtre normal
 int normal(int ** origine, int taille, int i,int j){
 	return origine[i][j];
 }
-
 
 

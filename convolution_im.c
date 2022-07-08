@@ -151,20 +151,24 @@ void convolut_im_bord(int ** origine, int ** masque, int ** convoluer, dimension
 			convoluer[i+centre_masquex][j+centre_masquey] = pixel_convolue/somme_pixel_masque;
 		}
 	}
+
 	//Remplissage des bordures
-	variation_i = d1_o - d_m/2;
-	for (int i=0; i < centre_masquex; i++){
+	variation_i = d1_o - d_m/2-1;
+	for (int i=0; i <centre_masquex; i++){
 		for(int j=0; j<d2_o; j++){
 			convoluer[i][j] = bord;
 			convoluer[i+variation_i][j] = bord;
+			convoluer[i+variation_i+1][j] = bord;
 		}
 	}
-	variation_j = d2_o - d_m/2;
-	for (int i=0; i < d1_o; i++){
+
+	variation_j = d2_o - d_m/2-1;
+	for (int i=0; i <d1_o; i++){
 		for(int j=0; j<centre_masquey; j++){
 			convoluer[i][j] = bord;
 			convoluer[i][j+variation_j] = bord;
 		}
+		convoluer[i][centre_masquey+variation_j] = bord;
 	}
 }
 

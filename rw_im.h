@@ -81,6 +81,9 @@ int est_bordure(int i, int j, dimension dim, int d1);
 //Cette procedure compare deux matrice de meme taille 
 void compare_mat(int ** mat1, int ** mat2, dimension dim);
 
+//Cette procedure affiche les valeur d'un tableau
+void affiche_tab(int tab[], int taille);
+
 //Tri rapide des pixels
 void tri_rapide_p(int t_pixel[], int p, int r);
 
@@ -91,6 +94,37 @@ int partition(int t[], int p, int r);
 //Fonction qui rend un nombre à la fois paire et positif
 int pair_posi(int nbr);
 
+//Fonction du calcule du maximum des éléments dans dans un tableau
+int max_seq(int tab[], int n);
 
+//Fonction du calcule du minimum des éléments dans dans un tableau
+int min_seq(int tab[], int n);
+
+//calcule d'un pixel avec un filtre
+void pixel_filtre(int ** origine, int ** filtre, int ** resultat, int taille_f, int x, int y, int somme);
+
+//Calcule de la valeur absolue d'un nombre
+int valeur_absolue(int nombre);
+
+/*Fonction d'extraction de l'histogramme de l'image hist est 
+un tableau indicé par les niveau de grisLa taille de hist doit 
+etre superieur ou egale au pixel max représentable elle retourne 
+le nombre de pixels différents dans l'image */
+void histogramme_im(int hist[], int ** image, entet_pgm entete);
+
+//seuillage binaire
+void seuillage_binaire(int **mat, dimension dim, int seuil, int min_pix, int max_pix);
+
+//valeur absolue pour un nombre reel
+float valeur_absoluef(float nombre);
+
+//Recherche de l'indice du minimum
+int argmin(double tab[], int n);
+
+//Generation de nombre aléatoire entre 0 et N
+int nombre_aleatoire(int N);
+
+//Fonction de mélange aléatoire des éléments d'un tableau
+void shuffle(int arr[], int size); 
 
 

@@ -104,4 +104,3 @@ void trans_lineaire(int ** contenu, int min, int max, dimension dim){
 }
 
 
-
